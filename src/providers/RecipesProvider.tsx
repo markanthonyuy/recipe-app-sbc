@@ -1,12 +1,11 @@
 import { SortType } from '@/constants/Sort'
-import { useGetInitialRecipes } from '@/hooks/useGetInitialRecipes'
 import { Recipe } from '@/types/Recipes'
+import INITIAL_RECIPES_DATA from '@/mocks/initial-recipes.json'
 import {
   createContext,
   PropsWithChildren,
   useCallback,
   useContext,
-  useEffect,
   useState,
 } from 'react'
 
@@ -35,8 +34,11 @@ export const RecipesProvider = ({ children }: PropsWithChildren) => {
   const [favorite, setFavorite] = useState<boolean | null>(null)
   const [filterString, setFilterString] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [recipes, setRecipes] = useState<Recipe[]>([])
-  const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([])
+  // @ts-expect-error because data comes from JSON
+  const [recipes, setRecipes] = useState<Recipe[]>(INITIAL_RECIPES_DATA)
+  const [filteredRecipes, setFilteredRecipes] =
+    // @ts-expect-error because data comes from JSON
+    useState<Recipe[]>(INITIAL_RECIPES_DATA)
 
   const handleSortRecipes = useCallback(
     (sort: keyof typeof SortType) => {

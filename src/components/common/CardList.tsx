@@ -101,12 +101,14 @@ export const CardList = (props: Props) => {
           <Fragment key={recipe.id}>
             <Card useFlexGap gap={3}>
               <ImageContainer>
-                <Image
-                  src={recipe.image}
-                  alt={`Photo of ${recipe.title}`}
-                  width="164"
-                  height="164"
-                />
+                {recipe.image && (
+                  <Image
+                    src={recipe.image}
+                    alt={`Photo of ${recipe.title}`}
+                    width="164"
+                    height="164"
+                  />
+                )}
                 <FavoriteIconButton isFavorite={!!recipe.isFavorite} />
               </ImageContainer>
               <Information>

@@ -62,7 +62,7 @@ export const RecipesProvider = ({ children }: PropsWithChildren) => {
       recipes = recipes.filter((recipe) => {
         return (
           recipe.title.toLowerCase().includes(filterString.toLowerCase()) ||
-          recipe.description.toLowerCase().includes(filterString.toLowerCase())
+          recipe.description?.toLowerCase().includes(filterString.toLowerCase())
         )
       })
     }

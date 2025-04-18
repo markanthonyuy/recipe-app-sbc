@@ -6,7 +6,7 @@ export const RecipeSchema = z.object({
   description: z.string().optional(),
   name: z.string(),
   dateCreated: z.date(),
-  image: z.string(),
+  image: z.string().optional(),
   isFavorite: z.boolean().optional(),
   email: z.string().email(),
   ingredients: z.string().optional(),

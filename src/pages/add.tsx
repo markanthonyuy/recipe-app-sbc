@@ -93,10 +93,11 @@ export default function AddRecipe() {
   })
 
   const onSubmit = handleSubmit((data) => {
+    if (!data) {
+      throw Error('Invalid form value')
+    }
     console.log(data)
   })
-
-  console.log(errors)
 
   return (
     <Box>

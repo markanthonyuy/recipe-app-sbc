@@ -1,71 +1,24 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RecipeSchema } from '@/schema/RecipeSchema'
-import { Alert, Box, Button, Stack, styled, Typography } from '@mui/material'
+import { Box, Button, Stack } from '@mui/material'
 import { Header } from '@/components/common/Header'
 import { MainLayout } from '@/components/layouts/MainLayout'
-import {
-  DRAWER_WIDTH,
-  MAIN_HEADER_HEIGHT,
-  MAIN_HEADER_HEIGHT_WITH_PADDING,
-} from '@/constants/Misc'
-import Image from 'next/image'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useDropzone } from 'react-dropzone'
 import { useState } from 'react'
 import { FormTextField } from '@/components/forms/FormTextField'
 import { Recipe } from '@/types/Recipes'
-import Link from 'next/link'
 import { useRecipes } from '@/providers/RecipesProvider'
-import Snackbar from '@mui/material/Snackbar'
 import { INTIAL_FORM_VALUE } from '@/constants/Form'
 import { generateUUIDv4 } from '@/helpers/id'
-
-const BaseMainContent = styled(Box)({
-  display: 'flex',
-  flexDirection: 'row',
-  flexGrow: 1,
-  paddingTop: 20,
-  paddingBottom: 20,
-  marginTop: MAIN_HEADER_HEIGHT_WITH_PADDING, // Height of AppBar
-  height: `calc(100vh - ${MAIN_HEADER_HEIGHT}px)`,
-  overflowY: 'auto',
-  background: '#f3f3f3',
-})
-
-const SideContent = styled(Stack)({
-  width: DRAWER_WIDTH,
-  paddingLeft: 20,
-  paddingRight: 20,
-})
-const Content = styled(Box)({
-  flexGrow: 1,
-  paddingRight: 20,
-})
-const DropZoneContainer = styled(Box)({
-  padding: 20,
-  border: '1px dashed #ccc',
-  background: '#fff',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  height: 200,
-  cursor: 'pointer',
-  overflow: 'hidden',
-  objectFit: 'cover',
-})
-const ButtonContainer = styled(Box)({
-  display: 'flex',
-  justifyContent: 'flex-end',
-})
-
-const BackButtonContainer = styled(Box)({
-  display: 'inline-block',
-})
-
-type PreviewableFile = File & {
-  preview?: string
-}
+import { FileUpload } from '@/components/common/FileUpload'
+import { PreviewableFile } from '@/types/File'
+import { FormMainContainer } from '@/components/layouts/FormMainContainer'
+import { FormSidebarContainer } from '@/components/layouts/FormSidebarContainer'
+import { FormContainer } from '@/components/layouts/FormContainer'
+import { BackButton } from '@/components/common/BackButton'
+import { FormButtonContainer } from '@/components/layouts/FormButtonContainer'
+import { Toast } from '@/components/common/Toast'
 
 export default function AddRecipe() {
   const { handleSetRecipes, recipes } = useRecipes()
@@ -100,7 +53,6 @@ export default function AddRecipe() {
     if (!newRecipe) {
       throw Error('Invalid form value')
     }
-    console.log(newRecipe)
     if (recipes) {
       handleSetRecipes([...recipes, { ...newRecipe }])
     }
@@ -112,40 +64,16 @@ export default function AddRecipe() {
     <Box>
       <Header title="Add Recipe" />
       <MainLayout>
-        <BaseMainContent>
-          <SideContent gap={2}>
-            <BackButtonContainer>
-              <Link href="/">
-                <Button
-                  component="label"
-                  variant="text"
-                  tabIndex={-1}
-                  startIcon={<ArrowBackIcon />}
-                >
-                  Back
-                </Button>
-              </Link>
-            </BackButtonContainer>
-            <DropZoneContainer {...getRootProps({ className: 'dropzone' })}>
-              <input {...getInputProps()} />
-              {files?.length && files[0]?.preview ? (
-                <Image
-                  src={files[0]?.preview}
-                  onLoad={() => {
-                    if (files[0].preview) {
-                      URL.revokeObjectURL(files[0].preview)
-                    }
-                  }}
-                  height={300}
-                  width={300}
-                  alt="Photo"
-                />
-              ) : (
-                <Typography>Upload photo</Typography>
-              )}
-            </DropZoneContainer>
-          </SideContent>
-          <Content>
+        <FormMainContainer>
+          <FormSidebarContainer gap={2}>
+            <BackButton href="/" label="back" />
+            <FileUpload
+              files={files}
+              getInputProps={getInputProps}
+              getRootProps={getRootProps}
+            />
+          </FormSidebarContainer>
+          <FormContainer>
             <form onSubmit={onSubmit}>
               <Stack gap={2}>
                 <FormTextField
@@ -188,40 +116,21 @@ export default function AddRecipe() {
                   multiline
                 />
 
-                <ButtonContainer gap={2}>
-                  {/* <Button variant="contained" color="warning">
-                    Delete
-                  </Button> */}
+                <FormButtonContainer>
                   <Button variant="contained" type="submit">
                     Save
                   </Button>
-                </ButtonContainer>
+                </FormButtonContainer>
               </Stack>
             </form>
-          </Content>
-        </BaseMainContent>
+          </FormContainer>
+        </FormMainContainer>
       </MainLayout>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={isOpenToast}
-        onClose={() => {
-          setIsOpenToast(false)
-        }}
-        autoHideDuration={5000}
-      >
-        <Alert
-          onClose={() => {
-            setIsOpenToast(false)
-          }}
-          severity="success"
-          variant="filled"
-        >
-          Recipe successfully added
-        </Alert>
-      </Snackbar>
+      <Toast
+        message="Recipe successfully added"
+        isOpen={isOpenToast}
+        setIsOpen={setIsOpenToast}
+      />
     </Box>
   )
 }

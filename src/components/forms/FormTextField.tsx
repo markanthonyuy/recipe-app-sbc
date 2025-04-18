@@ -1,6 +1,14 @@
 import { Recipe } from '@/types/Recipes'
-import { TextField, Typography } from '@mui/material'
+import { styled, TextField, Typography } from '@mui/material'
 import { Controller, useForm } from 'react-hook-form'
+
+const CustomTextField = styled(TextField)({
+  background: '#fff',
+
+  '> .MuiInputBase-readOnly': {
+    background: '#f3f3f3',
+  },
+})
 
 type Props = {
   name: keyof Recipe
@@ -9,6 +17,7 @@ type Props = {
   control: ReturnType<typeof useForm<Recipe>>['control']
   errors: ReturnType<typeof useForm<Recipe>>['formState']['errors']
   showErrorMessage?: boolean
+  readonly?: boolean
 }
 
 export const FormTextField = (props: Props) => {
@@ -18,12 +27,17 @@ export const FormTextField = (props: Props) => {
         name={props.name}
         control={props.control}
         render={({ field }) => (
-          <TextField
+          <CustomTextField
             {...field}
             label={props.label}
             multiline={props.multiline}
             rows={props.multiline ? 5 : 1}
             error={!!props.errors[props.name]?.message}
+            slotProps={{
+              input: {
+                readOnly: props.readonly,
+              },
+            }}
           />
         )}
       />

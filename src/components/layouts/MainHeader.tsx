@@ -3,14 +3,14 @@ import { useRecipes } from '@/providers/RecipesProvider'
 import { Header } from '../common/Header'
 
 export const MainHeader = () => {
-  const { filterString, setFilterString } = useRecipes()
+  const { filterString, handleFilterRecipes } = useRecipes()
 
   return (
     <Header title="Recipe App">
       <SearchInput
         searchTerm={filterString}
         onSearch={(searchTerm: string) => {
-          setFilterString(searchTerm)
+          handleFilterRecipes(searchTerm)
         }}
       />
     </Header>

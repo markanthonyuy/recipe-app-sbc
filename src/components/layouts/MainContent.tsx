@@ -6,6 +6,7 @@ import {
   MAIN_HEADER_HEIGHT,
   MAIN_HEADER_HEIGHT_WITH_PADDING,
 } from '@/constants/Misc'
+import Link from 'next/link'
 
 const BaseMainContent = styled(Box)({
   flexGrow: 1,
@@ -25,16 +26,22 @@ const Top = styled(Box)({
 })
 
 export const MainContent = () => {
-  const { data } = useRecipes()
+  const { recipes, isLoading, handleSetFavorite } = useRecipes()
 
   return (
     <BaseMainContent>
       <Top>
-        <Fab color="primary" size="small" aria-label="add" href="/add">
-          <AddIcon />
-        </Fab>
+        <Link href="/add">
+          <Fab color="primary" size="small" aria-label="add">
+            <AddIcon />
+          </Fab>
+        </Link>
       </Top>
-      <CardList recipes={data.recipes} loading={data.isLoading} />
+      <CardList
+        recipes={recipes}
+        loading={isLoading}
+        handleSetFavorite={handleSetFavorite}
+      />
     </BaseMainContent>
   )
 }

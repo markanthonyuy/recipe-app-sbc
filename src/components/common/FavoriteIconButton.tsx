@@ -11,11 +11,17 @@ const FavoriteButton = styled(IconButton)({
 
 type Props = {
   isFavorite: boolean
+  id: string
+  handleSetFavorite: (id: string) => void
 }
 
 export const FavoriteIconButton = (props: Props) => {
   return (
-    <FavoriteButton>
+    <FavoriteButton
+      onClick={() => {
+        props.handleSetFavorite(props.id)
+      }}
+    >
       {props.isFavorite ? (
         <StarIcon htmlColor="yellow" />
       ) : (

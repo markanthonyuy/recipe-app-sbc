@@ -1,11 +1,12 @@
 import { Recipe } from '@/types/Recipes'
-import { styled, Stack, Typography, Link, Box } from '@mui/material'
+import { styled, Stack, Typography, Box } from '@mui/material'
 import Image from 'next/image'
 import Divider from '@mui/material/Divider'
 import { formatDate } from '@/helpers/date'
 import CircularProgress from '@mui/material/CircularProgress'
 import { Fragment } from 'react'
 import { FavoriteIconButton } from './FavoriteIconButton'
+import Link from 'next/link'
 
 const CardListContainer = styled(Stack)({
   background: '#fff',
@@ -25,7 +26,7 @@ const ImageContainer = styled(Box)({
   width: '164px',
   height: '164px',
   position: 'relative',
-  background: '#f3f3f3',
+  background: '#ccc',
 })
 
 const Information = styled(Stack)({
@@ -75,8 +76,9 @@ const EmptyCardListContainer = styled(Stack)({
 })
 
 type Props = {
-  recipes: Recipe[] | null
+  recipes?: Recipe[] | null
   loading: boolean
+  handleSetFavorite: (id: string) => void
 }
 
 export const CardList = (props: Props) => {
@@ -109,15 +111,21 @@ export const CardList = (props: Props) => {
                     height="164"
                   />
                 )}
-                <FavoriteIconButton isFavorite={!!recipe.isFavorite} />
+                <FavoriteIconButton
+                  isFavorite={!!recipe.isFavorite}
+                  id={recipe.id}
+                  handleSetFavorite={props.handleSetFavorite}
+                />
               </ImageContainer>
               <Information>
                 <MainInfo useFlexGap gap={1}>
                   <TitleText variant="h6">{recipe.title}</TitleText>
-                  <BodyText variant="body2">{recipe.description}</BodyText>
-                  <Link href={`recipe/${recipe.id}`} variant="body2">
-                    See more
-                  </Link>
+                  <BodyText variant="body2">{recipe.instructions}</BodyText>
+                  {recipe.id && (
+                    <Link href={recipe.id}>
+                      <Typography variant="body2">See more</Typography>
+                    </Link>
+                  )}
                 </MainInfo>
                 <MoreInfo>
                   <Typography variant="body2" color="textSecondary">

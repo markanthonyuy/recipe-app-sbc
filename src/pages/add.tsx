@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RecipeSchema } from '@/schema/RecipeSchema'
-import { Box, Button, Stack, styled, Typography } from '@mui/material'
+import { Alert, Box, Button, Stack, styled, Typography } from '@mui/material'
 import { Header } from '@/components/common/Header'
 import { MainLayout } from '@/components/layouts/MainLayout'
 import {
@@ -16,6 +16,10 @@ import { useState } from 'react'
 import { FormTextField } from '@/components/forms/FormTextField'
 import { Recipe } from '@/types/Recipes'
 import Link from 'next/link'
+import { useRecipes } from '@/providers/RecipesProvider'
+import Snackbar from '@mui/material/Snackbar'
+import { INTIAL_FORM_VALUE } from '@/constants/Form'
+import { generateUUIDv4 } from '@/helpers/id'
 
 const BaseMainContent = styled(Box)({
   display: 'flex',
@@ -64,6 +68,8 @@ type PreviewableFile = File & {
 }
 
 export default function AddRecipe() {
+  const { handleSetRecipes, recipes } = useRecipes()
+  const [isOpenToast, setIsOpenToast] = useState(false)
   const [files, setFiles] = useState<PreviewableFile[]>()
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -83,20 +89,23 @@ export default function AddRecipe() {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<Recipe>({
     resolver: zodResolver(RecipeSchema),
-    defaultValues: {
-      dateCreated: new Date(),
-      isFavorite: false,
-    },
+    defaultValues: { ...INTIAL_FORM_VALUE, id: generateUUIDv4() },
   })
 
-  const onSubmit = handleSubmit((data) => {
-    if (!data) {
+  const onSubmit = handleSubmit((newRecipe) => {
+    if (!newRecipe) {
       throw Error('Invalid form value')
     }
-    console.log(data)
+    console.log(newRecipe)
+    if (recipes) {
+      handleSetRecipes([...recipes, { ...newRecipe }])
+    }
+    setIsOpenToast(true)
+    reset(INTIAL_FORM_VALUE)
   })
 
   return (
@@ -192,6 +201,27 @@ export default function AddRecipe() {
           </Content>
         </BaseMainContent>
       </MainLayout>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={isOpenToast}
+        onClose={() => {
+          setIsOpenToast(false)
+        }}
+        autoHideDuration={5000}
+      >
+        <Alert
+          onClose={() => {
+            setIsOpenToast(false)
+          }}
+          severity="success"
+          variant="filled"
+        >
+          Recipe successfully added
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }

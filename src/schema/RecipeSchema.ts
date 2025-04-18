@@ -1,14 +1,14 @@
 import { z } from 'zod'
 
 export const RecipeSchema = z.object({
-  id: z.string().optional(),
-  title: z.string(),
+  id: z.string(),
+  title: z.string().nonempty(),
   description: z.string().optional(),
-  name: z.string(),
+  name: z.string().nonempty(),
   dateCreated: z.date(),
   image: z.string().optional(),
   isFavorite: z.boolean().optional(),
   email: z.string().email(),
   ingredients: z.string().optional(),
-  instructions: z.string(),
+  instructions: z.string().nonempty(),
 })

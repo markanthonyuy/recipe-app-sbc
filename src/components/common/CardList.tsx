@@ -132,7 +132,7 @@ export const CardList = (props: Props) => {
                     Added by: {recipe.name}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
-                    Date: {formatDate(recipe.dateCreated)}
+                    Date: {formatDate(new Date(recipe.dateCreated))}
                   </Typography>
                 </MoreInfo>
               </Information>

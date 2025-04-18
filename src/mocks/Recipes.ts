@@ -13,7 +13,9 @@ const createRecipe = () => {
       max: 100,
     })}/164`,
     isFavorite: faker.datatype.boolean(),
-    dateCreated: faker.date.past({ years: 1 }),
+    dateCreated: faker.date.recent({
+      days: 10,
+    }),
   }
 }
 

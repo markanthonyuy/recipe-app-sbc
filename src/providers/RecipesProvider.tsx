@@ -1,10 +1,12 @@
 import { SortType } from '@/constants/Sort'
+import { useGetInitialRecipes } from '@/hooks/useGetInitialRecipes'
 import { Recipe } from '@/types/Recipes'
 import {
   createContext,
   PropsWithChildren,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from 'react'
 

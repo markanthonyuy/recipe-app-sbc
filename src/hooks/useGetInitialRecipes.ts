@@ -11,7 +11,7 @@ export const useGetInitialRecipes = () => {
     ;(async function getData() {
       setIsLoading(true)
       await sleep(2000)
-      setRecipes(createRecipes(15))
+      setRecipes(createRecipes(5))
       setIsLoading(false)
     })()
   }, [])

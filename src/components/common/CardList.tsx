@@ -65,14 +65,28 @@ const BodyText = styled(Typography)({
   whiteSpace: 'initial',
 })
 
+const EmptyCardListContainer = styled(Stack)({
+  height: '80vh',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+})
+
 type Props = {
-  recipes: Recipe[]
+  recipes: Recipe[] | null
 }
 
 export const CardList = (props: Props) => {
+  if (!props.recipes?.length) {
+    return (
+      <EmptyCardListContainer>
+        <Typography variant="h5">No Record Found!</Typography>
+      </EmptyCardListContainer>
+    )
+  }
   return (
     <CardListContainer gap={2}>
-      {props.recipes.map((recipe) => {
+      {props.recipes?.map((recipe) => {
         return (
           <Card useFlexGap gap={3} key={recipe.id}>
             <ImageContainer>

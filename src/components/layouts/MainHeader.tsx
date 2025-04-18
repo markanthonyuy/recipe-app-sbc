@@ -1,6 +1,7 @@
 import { AppBar, Toolbar, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { SearchInput } from '../forms/SearchInput'
+import { useRecipes } from '@/providers/RecipesProvider'
 
 export const HEADER_VERTICAL_PADDING = 10
 
@@ -15,6 +16,8 @@ const BaseToolbar = styled(Toolbar)({
 })
 
 export const MainHeader = () => {
+  const { filterString, setFilterString } = useRecipes()
+
   return (
     <Header position="fixed">
       <BaseToolbar>
@@ -22,8 +25,9 @@ export const MainHeader = () => {
           Recipe App
         </Typography>
         <SearchInput
+          searchTerm={filterString}
           onSearch={(searchTerm: string) => {
-            console.log(searchTerm)
+            setFilterString(searchTerm)
           }}
         />
       </BaseToolbar>

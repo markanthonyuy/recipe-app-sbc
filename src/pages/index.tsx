@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles'
 import { MainHeader } from '@/components/layouts/MainHeader'
 import { Sidebar } from '@/components/layouts/Sidebar'
 import { MainContent } from '@/components/layouts/MainContent'
-import { useGetInitialRecipes } from '@/hooks/useGetInitialRecipes'
+import { RecipesProvider } from '@/providers/RecipesProvider'
 
 const MainLayout = styled('div')({
   display: 'flex',
@@ -14,8 +14,6 @@ const MainLayout = styled('div')({
 })
 
 export default function Index() {
-  const { recipes } = useGetInitialRecipes()
-
   return (
     <>
       <Head>
@@ -25,13 +23,15 @@ export default function Index() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="">
-        <Container>
-          <MainHeader />
-          <MainLayout>
-            <Sidebar />
-            <MainContent recipes={recipes} />
-          </MainLayout>
-        </Container>
+        <RecipesProvider>
+          <Container>
+            <MainHeader />
+            <MainLayout>
+              <Sidebar />
+              <MainContent />
+            </MainLayout>
+          </Container>
+        </RecipesProvider>
       </main>
     </>
   )

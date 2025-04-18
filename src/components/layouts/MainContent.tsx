@@ -3,6 +3,7 @@ import { HEADER_VERTICAL_PADDING } from './MainHeader'
 import AddIcon from '@mui/icons-material/Add'
 import { CardList } from '../common/CardList'
 import { Recipe } from '@/types/Recipes'
+import { useRecipes } from '@/providers/RecipesProvider'
 export const MAIN_HEADER_HEIGHT = 64 + HEADER_VERTICAL_PADDING * 2
 
 const BaseMainContent = styled(Box)({
@@ -21,11 +22,9 @@ const Top = styled(Box)({
   right: 10,
 })
 
-type Props = {
-  recipes: Recipe[]
-}
+export const MainContent = () => {
+  const { recipes } = useRecipes()
 
-export const MainContent = (props: Props) => {
   return (
     <BaseMainContent>
       <Top>
@@ -33,7 +32,7 @@ export const MainContent = (props: Props) => {
           <AddIcon />
         </Fab>
       </Top>
-      <CardList recipes={props.recipes} />
+      <CardList recipes={recipes} />
     </BaseMainContent>
   )
 }

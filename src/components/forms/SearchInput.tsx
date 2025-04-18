@@ -1,7 +1,6 @@
 import { InputBase } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import SearchIcon from '@mui/icons-material/Search'
-import { useState } from 'react'
 
 const BaseSearchInput = styled(InputBase)(({ theme }) => ({
   backgroundColor: theme.palette.common.white,
@@ -25,20 +24,20 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'flex-end',
   zIndex: 1000,
+  cursor: 'pointer',
 }))
 
 type Props = {
+  searchTerm: string
   onSearch: (searchTerm: string) => void
 }
 
 export const SearchInput = (props: Props) => {
-  const [searchTerm, setSearchTerm] = useState('')
-
   return (
     <Search>
       <SearchIconWrapper
         onClick={() => {
-          props.onSearch(searchTerm)
+          props.onSearch(props.searchTerm)
         }}
       >
         <SearchIcon color="action" />
@@ -47,9 +46,14 @@ export const SearchInput = (props: Props) => {
         placeholder="Search here…"
         inputProps={{
           'aria-label': 'search',
-          value: searchTerm,
+          value: props.searchTerm,
+          onKeyDown: (e) => {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+              props.onSearch(e.currentTarget.value)
+            }
+          },
           onInput: (e) => {
-            setSearchTerm(e.currentTarget.value)
+            props.onSearch(e.currentTarget.value)
           },
         }}
       />

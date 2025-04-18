@@ -1,6 +1,7 @@
 import {
   Drawer,
   FormControlLabel,
+  Link,
   Radio,
   RadioGroup,
   Stack,
@@ -9,6 +10,7 @@ import {
 } from '@mui/material'
 import { MAIN_HEADER_HEIGHT } from './MainContent'
 import { SortType } from '@/constants/Sort'
+import { useRecipes } from '@/providers/RecipesProvider'
 
 const drawerWidth = 340
 
@@ -44,12 +46,17 @@ const FilterBox = styled(Stack)(({ theme }) => ({
 }))
 
 export const Sidebar = () => {
+  const { setSortByTitle, setFavorite, favorite } = useRecipes()
   return (
     <BaseDrawer variant="permanent" anchor="left">
       <BaseSidebar useFlexGap gap={5}>
         <Stack useFlexGap gap={2}>
           <Typography variant="subtitle1">Sort by Title</Typography>
-          <Select>
+          <Select
+            onChange={(e) => {
+              setSortByTitle(e.currentTarget.value as keyof typeof SortType)
+            }}
+          >
             {Object.entries(SortType).map(([key, value]) => {
               return (
                 <option value={key} key={key}>
@@ -64,11 +71,34 @@ export const Sidebar = () => {
 
           <FilterBox useFlexGap gap={1}>
             <Typography variant="subtitle2">Favorites?</Typography>
-            <RadioGroup defaultValue="Yes" name="favorites-radio-buttons-group">
-              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-              <FormControlLabel value="No" control={<Radio />} label="No" />
+            <RadioGroup
+              name="favorites-radio-buttons-group"
+              onChange={(e) => {
+                setFavorite(e.currentTarget.value === 'YES')
+              }}
+            >
+              <FormControlLabel
+                value="YES"
+                control={<Radio checked={favorite !== null && favorite} />}
+                label="Yes"
+              />
+              <FormControlLabel
+                value="NO"
+                control={<Radio checked={favorite !== null && !favorite} />}
+                label="No"
+              />
             </RadioGroup>
           </FilterBox>
+
+          <Link
+            component="button"
+            variant="body2"
+            onClick={() => {
+              setFavorite(null)
+            }}
+          >
+            Reset favorites
+          </Link>
         </Stack>
       </BaseSidebar>
     </BaseDrawer>

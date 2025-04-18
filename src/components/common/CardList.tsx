@@ -1,12 +1,11 @@
 import { Recipe } from '@/types/Recipes'
-import { styled, Stack, Typography, Link, Box, IconButton } from '@mui/material'
-import StarIcon from '@mui/icons-material/Star'
-import StarOutlineIcon from '@mui/icons-material/StarOutline'
+import { styled, Stack, Typography, Link, Box } from '@mui/material'
 import Image from 'next/image'
 import Divider from '@mui/material/Divider'
 import { formatDate } from '@/helpers/date'
 import CircularProgress from '@mui/material/CircularProgress'
 import { Fragment } from 'react'
+import { FavoriteIconButton } from './FavoriteIconButton'
 
 const CardListContainer = styled(Stack)({
   background: '#fff',
@@ -44,12 +43,6 @@ const MainInfo = styled(Stack)({
 const MoreInfo = styled(Box)({
   display: 'flex',
   justifyContent: 'space-between',
-})
-
-const FavoriteButton = styled(IconButton)({
-  position: 'absolute',
-  top: 0,
-  right: 0,
 })
 
 const TitleText = styled(Typography)({
@@ -114,13 +107,7 @@ export const CardList = (props: Props) => {
                   width="164"
                   height="164"
                 />
-                <FavoriteButton>
-                  {recipe.isFavorite ? (
-                    <StarIcon htmlColor="yellow" />
-                  ) : (
-                    <StarOutlineIcon htmlColor="yellow" />
-                  )}
-                </FavoriteButton>
+                <FavoriteIconButton isFavorite={!!recipe.isFavorite} />
               </ImageContainer>
               <Information>
                 <MainInfo useFlexGap gap={1}>
@@ -132,7 +119,7 @@ export const CardList = (props: Props) => {
                 </MainInfo>
                 <MoreInfo>
                   <Typography variant="body2" color="textSecondary">
-                    Added by: {recipe.author}
+                    Added by: {recipe.name}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
                     Date: {formatDate(recipe.dateCreated)}

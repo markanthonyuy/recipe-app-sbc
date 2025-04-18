@@ -1,18 +1,19 @@
 import { styled, Box, Fab } from '@mui/material'
-import { HEADER_VERTICAL_PADDING } from './MainHeader'
 import AddIcon from '@mui/icons-material/Add'
 import { CardList } from '../common/CardList'
-import { Recipe } from '@/types/Recipes'
 import { useRecipes } from '@/providers/RecipesProvider'
-export const MAIN_HEADER_HEIGHT = 64 + HEADER_VERTICAL_PADDING * 2
+import {
+  MAIN_HEADER_HEIGHT,
+  MAIN_HEADER_HEIGHT_WITH_PADDING,
+} from '@/constants/Misc'
 
 const BaseMainContent = styled(Box)({
   flexGrow: 1,
   position: 'relative',
   padding: 20,
   paddingBottom: 50,
-  marginTop: MAIN_HEADER_HEIGHT, // Height of AppBar
-  height: 'calc(100vh - 64px)',
+  marginTop: MAIN_HEADER_HEIGHT_WITH_PADDING, // Height of AppBar
+  height: `calc(100vh - ${MAIN_HEADER_HEIGHT}px)`,
   overflowY: 'auto',
   background: '#f3f3f3',
 })
@@ -29,7 +30,7 @@ export const MainContent = () => {
   return (
     <BaseMainContent>
       <Top>
-        <Fab color="primary" size="small" aria-label="add" href="/recipe/add">
+        <Fab color="primary" size="small" aria-label="add" href="/add">
           <AddIcon />
         </Fab>
       </Top>

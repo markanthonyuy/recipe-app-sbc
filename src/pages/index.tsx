@@ -5,13 +5,7 @@ import { MainHeader } from '@/components/layouts/MainHeader'
 import { Sidebar } from '@/components/layouts/Sidebar'
 import { MainContent } from '@/components/layouts/MainContent'
 import { RecipesProvider } from '@/providers/RecipesProvider'
-
-const MainLayout = styled('div')({
-  display: 'flex',
-  height: '100vh',
-  overflow: 'hidden',
-  flexDirection: 'row',
-})
+import { MainLayout } from '@/components/layouts/MainLayout'
 
 export default function Index() {
   return (
@@ -22,7 +16,7 @@ export default function Index() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="">
+      <main>
         <RecipesProvider>
           <Box>
             <MainHeader />

@@ -8,17 +8,15 @@ import {
   Typography,
   styled,
 } from '@mui/material'
-import { MAIN_HEADER_HEIGHT } from './MainContent'
 import { SortType } from '@/constants/Sort'
 import { useRecipes } from '@/providers/RecipesProvider'
-
-const drawerWidth = 340
+import { DRAWER_WIDTH, MAIN_HEADER_HEIGHT_WITH_PADDING } from '@/constants/Misc'
 
 const BaseDrawer = styled(Drawer)({
-  width: drawerWidth,
+  width: DRAWER_WIDTH,
   flexShrink: 0,
   '& .MuiDrawer-paper': {
-    width: drawerWidth,
+    width: DRAWER_WIDTH,
     boxSizing: 'border-box',
     background: '#f3f3f3',
   },
@@ -27,7 +25,7 @@ const BaseDrawer = styled(Drawer)({
 const BaseSidebar = styled(Stack)({
   paddingLeft: 20,
   paddingRight: 20,
-  paddingTop: MAIN_HEADER_HEIGHT + 20,
+  paddingTop: MAIN_HEADER_HEIGHT_WITH_PADDING + 20,
 })
 
 const Select = styled('select')(({ theme }) => ({

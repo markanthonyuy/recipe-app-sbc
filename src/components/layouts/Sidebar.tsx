@@ -20,7 +20,7 @@ const BaseDrawer = styled(Drawer)({
   '& .MuiDrawer-paper': {
     width: drawerWidth,
     boxSizing: 'border-box',
-    background: '#f1f1f1',
+    background: '#f3f3f3',
   },
 })
 

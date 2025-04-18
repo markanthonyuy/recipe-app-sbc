@@ -14,6 +14,7 @@ const BaseMainContent = styled(Box)({
   marginTop: MAIN_HEADER_HEIGHT, // Height of AppBar
   height: 'calc(100vh - 64px)',
   overflowY: 'auto',
+  background: '#f3f3f3',
 })
 
 const Top = styled(Box)({

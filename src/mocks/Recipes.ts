@@ -9,7 +9,7 @@ const createRecipe = () => {
     image: `https://picsum.photos/id/${faker.helpers.rangeToNumber({
       min: 1,
       max: 100,
-    })}/200`,
+    })}/164`,
     isFavorite: faker.datatype.boolean(),
     dateCreated: faker.date.recent(),
   }

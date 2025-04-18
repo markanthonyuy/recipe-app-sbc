@@ -24,13 +24,13 @@ export default function Index() {
       </Head>
       <main className="">
         <RecipesProvider>
-          <Container>
+          <Box>
             <MainHeader />
             <MainLayout>
               <Sidebar />
               <MainContent />
             </MainLayout>
-          </Container>
+          </Box>
         </RecipesProvider>
       </main>
     </>

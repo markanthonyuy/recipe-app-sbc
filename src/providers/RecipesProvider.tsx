@@ -16,14 +16,22 @@ const Recipes = {
   setFavorite: (favorite: boolean | null) => {},
   filterString: '',
   setFilterString: (filterString: string) => {},
-  recipes: null,
+  data: {
+    isLoading: false,
+    recipes: [],
+  },
 }
 
 export const RecipesContext = createContext<
-  typeof Recipes & {
-    recipes: Recipe[] | null
-  }
->(Recipes)
+  | (typeof Recipes & {
+      favorite: boolean | null
+      data: {
+        isLoading: boolean
+        recipes: Recipe[]
+      }
+    })
+  | null
+>(null)
 
 export const RecipesProvider = ({ children }: PropsWithChildren) => {
   const [sortByTitle, setSortByTitle] = useState<keyof typeof SortType>('ASC')
@@ -38,7 +46,7 @@ export const RecipesProvider = ({ children }: PropsWithChildren) => {
       return recipes
     }
 
-    // Handle Sort
+    // Handle sort
     if (sortByTitle === 'ASC') {
       recipes = initial.recipes.sort((a, b) => {
         return a.title.localeCompare(b.title)
@@ -77,7 +85,10 @@ export const RecipesProvider = ({ children }: PropsWithChildren) => {
         setFavorite,
         filterString,
         setFilterString,
-        recipes,
+        data: {
+          isLoading: initial.isLoading,
+          recipes,
+        },
       }}
     >
       {children}

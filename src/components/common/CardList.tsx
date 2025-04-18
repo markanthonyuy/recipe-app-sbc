@@ -5,6 +5,8 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline'
 import Image from 'next/image'
 import Divider from '@mui/material/Divider'
 import { formatDate } from '@/helpers/date'
+import CircularProgress from '@mui/material/CircularProgress'
+import { Fragment } from 'react'
 
 const CardListContainer = styled(Stack)({
   background: '#fff',
@@ -81,10 +83,18 @@ const EmptyCardListContainer = styled(Stack)({
 
 type Props = {
   recipes: Recipe[] | null
+  loading: boolean
 }
 
 export const CardList = (props: Props) => {
-  if (!props.recipes?.length) {
+  if (props.loading) {
+    return (
+      <EmptyCardListContainer>
+        <CircularProgress />
+      </EmptyCardListContainer>
+    )
+  }
+  if (!props.recipes?.length && !props.loading) {
     return (
       <EmptyCardListContainer>
         <Typography variant="h5">No Record Found!</Typography>
@@ -95,8 +105,8 @@ export const CardList = (props: Props) => {
     <CardListContainer gap={2}>
       {props.recipes?.map((recipe) => {
         return (
-          <>
-            <Card useFlexGap gap={3} key={recipe.id}>
+          <Fragment key={recipe.id}>
+            <Card useFlexGap gap={3}>
               <ImageContainer>
                 <Image
                   src={recipe.image}
@@ -131,7 +141,7 @@ export const CardList = (props: Props) => {
               </Information>
             </Card>
             <Divider />
-          </>
+          </Fragment>
         )
       })}
     </CardListContainer>

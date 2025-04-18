@@ -24,7 +24,7 @@ const Top = styled(Box)({
 })
 
 export const MainContent = () => {
-  const { recipes } = useRecipes()
+  const { data } = useRecipes()
 
   return (
     <BaseMainContent>
@@ -33,7 +33,7 @@ export const MainContent = () => {
           <AddIcon />
         </Fab>
       </Top>
-      <CardList recipes={recipes} />
+      <CardList recipes={data.recipes} loading={data.isLoading} />
     </BaseMainContent>
   )
 }

@@ -8,13 +8,21 @@ import { FormContainer } from '@/components/layouts/FormContainer'
 import { FormMainContainer } from '@/components/layouts/FormMainContainer'
 import { FormSidebarContainer } from '@/components/layouts/FormSidebarContainer'
 import { MainLayout } from '@/components/layouts/MainLayout'
-import { INTIAL_FORM_VALUE } from '@/constants/Form'
 import { useRecipes } from '@/providers/RecipesProvider'
 import { RecipeSchema } from '@/schema/RecipeSchema'
 import { PreviewableFile } from '@/types/File'
 import { Recipe } from '@/types/Recipes'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Box, Stack, Button } from '@mui/material'
+import {
+  Box,
+  Stack,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material'
 import { useRouter } from 'next/router'
 import { useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -23,7 +31,11 @@ import { useForm } from 'react-hook-form'
 export default function EditRecipe() {
   const router = useRouter()
   const { handleSetRecipes, recipes } = useRecipes()
-  const [isOpenToast, setIsOpenToast] = useState(false)
+  const [openState, setOpenState] = useState({
+    editToast: false,
+    deleteToast: false,
+    deleteConfirmDialog: false,
+  })
   const [files, setFiles] = useState<PreviewableFile[]>()
   const selectedRecipe = useMemo(() => {
     return recipes?.find((recipe) => {
@@ -68,13 +80,54 @@ export default function EditRecipe() {
       })
       handleSetRecipes(newRecipes)
     }
-    setIsOpenToast(true)
+    setOpenState({
+      ...openState,
+      editToast: true,
+    })
     setTimeout(() => {
       router.push({
         pathname: '/',
       })
     }, 1000)
   })
+
+  const handleOpenDeleteConfirmation = () => {
+    setOpenState({
+      ...openState,
+      deleteConfirmDialog: true,
+    })
+  }
+
+  const handleCloseDeleteConfirmation = () => {
+    setOpenState({
+      ...openState,
+      deleteConfirmDialog: false,
+    })
+  }
+
+  const handleDeleteRecipe = () => {
+    if (!selectedRecipe || !recipes) {
+      return
+    }
+    const tempRecipes =
+      recipes.filter((recipe) => {
+        return selectedRecipe.id !== recipe.id
+      }) || []
+
+    handleSetRecipes(tempRecipes)
+
+    setOpenState({
+      ...openState,
+      deleteConfirmDialog: false,
+      deleteToast: true,
+    })
+
+    setTimeout(() => {
+      router.push({
+        pathname: '/',
+      })
+    }, 1000)
+  }
 
   return (
     <Box>
@@ -134,7 +187,11 @@ export default function EditRecipe() {
                 />
 
                 <FormButtonContainer gap={2}>
-                  <Button variant="contained" color="warning">
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    onClick={handleOpenDeleteConfirmation}
+                  >
                     Delete
                   </Button>
                   <Button variant="contained" type="submit">
@@ -148,9 +205,47 @@ export default function EditRecipe() {
       </MainLayout>
       <Toast
         message="Recipe successfully updated"
-        isOpen={isOpenToast}
-        setIsOpen={setIsOpenToast}
+        isOpen={openState.editToast}
+        setIsOpen={() => {
+          setOpenState({
+            ...openState,
+            editToast: false,
+          })
+        }}
       />
+      <Toast
+        message="Recipe successfully deleted"
+        isOpen={openState.deleteToast}
+        setIsOpen={() => {
+          setOpenState({
+            ...openState,
+            deleteToast: false,
+          })
+        }}
+      />
+      <Dialog
+        open={openState.deleteConfirmDialog}
+        onClose={handleCloseDeleteConfirmation}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Delete recipe confirmation
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this recipe?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteConfirmation} color="warning">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteRecipe} autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }

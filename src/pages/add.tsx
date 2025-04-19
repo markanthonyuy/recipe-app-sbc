@@ -53,6 +53,7 @@ export default function AddRecipe() {
     if (!newRecipe) {
       throw Error('Invalid form value')
     }
+
     if (recipes) {
       handleSetRecipes([...recipes, { ...newRecipe }])
     }

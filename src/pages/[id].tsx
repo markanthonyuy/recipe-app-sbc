@@ -107,7 +107,7 @@ export default function EditRecipe() {
 
   const handleDeleteRecipe = () => {
     if (!selectedRecipe || !recipes) {
-      return
+      throw Error('No recipe selected or available')
     }
     const tempRecipes =
       recipes.filter((recipe) => {

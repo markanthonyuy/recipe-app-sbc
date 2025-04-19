@@ -19,6 +19,7 @@ import { FormContainer } from '@/components/layouts/FormContainer'
 import { BackButton } from '@/components/common/BackButton'
 import { FormButtonContainer } from '@/components/layouts/FormButtonContainer'
 import { Toast } from '@/components/common/Toast'
+import { getFileExtension } from '@/helpers/file'
 
 export default function AddRecipe() {
   const { handleSetRecipes, recipes, checkTitleExists } = useRecipes()
@@ -29,7 +30,7 @@ export default function AddRecipe() {
   const [files, setFiles] = useState<PreviewableFile[]>()
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      'image/*': [],
+      'image/*': ['jpg', 'png', 'gif'],
     },
     multiple: false,
     onDrop: (acceptedFiles: File[]) => {
@@ -52,27 +53,55 @@ export default function AddRecipe() {
     defaultValues: { ...INTIAL_FORM_VALUE, id: generateUUIDv4() },
   })
 
-  const onSubmit = handleSubmit((newRecipe) => {
-    if (!newRecipe) {
-      throw Error('Invalid form value')
-    }
+  const onSubmit = handleSubmit(async (newRecipe) => {
+    try {
+      if (!newRecipe) {
+        throw Error('Invalid form value')
+      }
 
-    if (checkTitleExists(newRecipe.title)) {
+      if (checkTitleExists(newRecipe.title)) {
+        setOpenState({
+          ...openState,
+          formErrorToast: true,
+        })
+        throw Error('Title already exists')
+      }
+
+      if (!files?.length) {
+        throw Error('No file selected')
+      }
+
+      // Upload image
+      const uploadFileData = new FormData()
+      uploadFileData.set('file', files[0])
+      uploadFileData.set('name', newRecipe.title)
+
+      const uploadResult = await fetch('/api/upload', {
+        method: 'POST',
+        body: uploadFileData,
+      })
+
+      if (!uploadResult) {
+        throw Error('Uploading image failed')
+      }
+
+      handleSetRecipes([
+        ...(recipes || []),
+        {
+          ...newRecipe,
+          image: `${newRecipe.title}.${getFileExtension(files[0].name)}`,
+        },
+      ])
       setOpenState({
         ...openState,
-        formErrorToast: true,
+        addSuccessToast: true,
       })
-      return
-    }
 
-    if (recipes) {
-      handleSetRecipes([...recipes, { ...newRecipe }])
+      reset(INTIAL_FORM_VALUE)
+      setFiles(undefined)
+    } catch (e) {
+      console.error(e)
     }
-    setOpenState({
-      ...openState,
-      addSuccessToast: true,
-    })
-    reset(INTIAL_FORM_VALUE)
   })
 
   return (

@@ -96,6 +96,7 @@ export const CardList = (props: Props) => {
       </EmptyCardListContainer>
     )
   }
+
   return (
     <CardListContainer gap={2}>
       {props.recipes?.map((recipe) => {
@@ -105,7 +106,7 @@ export const CardList = (props: Props) => {
               <ImageContainer>
                 {recipe.image && (
                   <Image
-                    src={recipe.image}
+                    src={`/images/${recipe.image}`}
                     alt={`Photo of ${recipe.title}`}
                     width="164"
                     height="164"

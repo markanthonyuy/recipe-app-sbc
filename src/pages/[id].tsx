@@ -206,22 +206,24 @@ export default function EditRecipe() {
       <Toast
         message="Recipe successfully updated"
         isOpen={openState.editToast}
-        setIsOpen={() => {
+        setOnClose={() => {
           setOpenState({
             ...openState,
             editToast: false,
           })
         }}
+        type="success"
       />
       <Toast
         message="Recipe successfully deleted"
         isOpen={openState.deleteToast}
-        setIsOpen={() => {
+        setOnClose={() => {
           setOpenState({
             ...openState,
             deleteToast: false,
           })
         }}
+        type="success"
       />
       <Dialog
         open={openState.deleteConfirmDialog}

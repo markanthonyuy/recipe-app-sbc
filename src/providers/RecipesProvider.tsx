@@ -19,6 +19,7 @@ const Recipes = {
   isLoading: false,
   handleSetRecipes: (recipes: Recipe[]) => {},
   setIsLoading: (loading: boolean) => {},
+  checkTitleExists: (newTitle: string) => true,
 }
 
 export const RecipesContext = createContext<
@@ -123,6 +124,17 @@ export const RecipesProvider = ({ children }: PropsWithChildren) => {
     setFilteredRecipes(newRecipes)
   }, [])
 
+  const checkTitleExists = useCallback(
+    (newTitle: string) => {
+      const recipeTitles = recipes.map((recipe) => {
+        return recipe.title
+      })
+
+      return recipeTitles.includes(newTitle)
+    },
+    [recipes]
+  )
+
   return (
     <RecipesContext.Provider
       value={{
@@ -137,6 +149,7 @@ export const RecipesProvider = ({ children }: PropsWithChildren) => {
         handleSetFavorite,
         setIsLoading,
         isLoading,
+        checkTitleExists,
       }}
     >
       {children}

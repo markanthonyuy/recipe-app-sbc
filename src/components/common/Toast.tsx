@@ -1,9 +1,10 @@
-import { Snackbar, Alert } from '@mui/material'
+import { Snackbar, Alert, AlertProps } from '@mui/material'
 
 type Props = {
   message: string
   isOpen: boolean
-  setIsOpen: (open: boolean) => void
+  setOnClose: () => void
+  type: AlertProps['severity']
 }
 export const Toast = (props: Props) => {
   return (
@@ -14,15 +15,15 @@ export const Toast = (props: Props) => {
       }}
       open={props.isOpen}
       onClose={() => {
-        props.setIsOpen(false)
+        props.setOnClose()
       }}
       autoHideDuration={5000}
     >
       <Alert
         onClose={() => {
-          props.setIsOpen(false)
+          props.setOnClose()
         }}
-        severity="success"
+        severity={props.type}
         variant="filled"
       >
         {props.message}

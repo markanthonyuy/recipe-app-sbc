@@ -21,8 +21,11 @@ import { FormButtonContainer } from '@/components/layouts/FormButtonContainer'
 import { Toast } from '@/components/common/Toast'
 
 export default function AddRecipe() {
-  const { handleSetRecipes, recipes } = useRecipes()
-  const [isOpenToast, setIsOpenToast] = useState(false)
+  const { handleSetRecipes, recipes, checkTitleExists } = useRecipes()
+  const [openState, setOpenState] = useState({
+    addSuccessToast: false,
+    formErrorToast: false,
+  })
   const [files, setFiles] = useState<PreviewableFile[]>()
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -54,10 +57,21 @@ export default function AddRecipe() {
       throw Error('Invalid form value')
     }
 
+    if (checkTitleExists(newRecipe.title)) {
+      setOpenState({
+        ...openState,
+        formErrorToast: true,
+      })
+      return
+    }
+
     if (recipes) {
       handleSetRecipes([...recipes, { ...newRecipe }])
     }
-    setIsOpenToast(true)
+    setOpenState({
+      ...openState,
+      addSuccessToast: true,
+    })
     reset(INTIAL_FORM_VALUE)
   })
 
@@ -129,8 +143,25 @@ export default function AddRecipe() {
       </MainLayout>
       <Toast
         message="Recipe successfully added"
-        isOpen={isOpenToast}
-        setIsOpen={setIsOpenToast}
+        isOpen={openState.addSuccessToast}
+        setOnClose={() => {
+          setOpenState({
+            ...openState,
+            addSuccessToast: false,
+          })
+        }}
+        type="success"
+      />
+      <Toast
+        message="Title already exists"
+        isOpen={openState.formErrorToast}
+        setOnClose={() => {
+          setOpenState({
+            ...openState,
+            formErrorToast: false,
+          })
+        }}
+        type="error"
       />
     </Box>
   )

@@ -126,7 +126,7 @@ export default function EditRecipe() {
       router.push({
         pathname: '/',
       })
-    }, 1000)
+    }, 500)
   }
 
   return (

@@ -32,11 +32,12 @@ export const RecipesContext = createContext<
 
 export const RecipesProvider = ({ children }: PropsWithChildren) => {
   const [sortByTitle, setSortByTitle] = useState<keyof typeof SortType>('ASC')
+  // favorite can be nullable to show the all state
   const [favorite, setFavorite] = useState<boolean | null>(null)
   const [filterString, setFilterString] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   // @ts-expect-error because data comes from JSON
-  const [recipes, setRecipes] = useState<Recipe[]>(INITIAL_RECIPES_DATA)
+  const [recipes, setRecipes] = useState<Recipe[]>(INITIAL_RECIPES_DATA) // Master recipe list without any filters applied
   const [filteredRecipes, setFilteredRecipes] =
     // @ts-expect-error because data comes from JSON
     useState<Recipe[]>(INITIAL_RECIPES_DATA)
@@ -50,7 +51,7 @@ export const RecipesProvider = ({ children }: PropsWithChildren) => {
         return
       }
 
-      // Handle sort
+      // Requirements only ask for title to be sortable
       tempRecipes = recipes.sort((a, b) => {
         if (sort === 'ASC') {
           return a.title.localeCompare(b.title)
@@ -73,10 +74,15 @@ export const RecipesProvider = ({ children }: PropsWithChildren) => {
         setFilteredRecipes(recipes)
         return
       }
+
+      // Searchable fields are title, instructions and name
       tempRecipes = recipes.filter((recipe) => {
         return (
           recipe.title.toLowerCase().includes(filterString.toLowerCase()) ||
-          recipe.description?.toLowerCase().includes(filterString.toLowerCase())
+          recipe.instructions
+            ?.toLowerCase()
+            .includes(filterString.toLowerCase()) ||
+          recipe.name?.toLowerCase().includes(filterString.toLowerCase())
         )
       })
       setFilterString(filterString)

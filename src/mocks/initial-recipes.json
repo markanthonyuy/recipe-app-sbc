@@ -8,7 +8,8 @@
     "email": "Arianna.Carroll@gmail.com",
     "image": "Linguine With Clams.jpg",
     "isFavorite": false,
-    "dateCreated": "2025-04-16T21:52:24.421Z"
+    "dateCreated": "2025-04-16T21:52:24.421Z",
+    "dateModified": "2025-04-16T21:52:24.421Z"
   },
   {
     "id": "24069a55-a8be-4293-b00b-75f866f79f61",
@@ -19,7 +20,8 @@
     "email": "Roma.Larson@gmail.com",
     "image": "Parsnip Salad.jpg",
     "isFavorite": false,
-    "dateCreated": "2025-04-11T17:46:32.898Z"
+    "dateCreated": "2025-04-11T17:46:32.898Z",
+    "dateModified": "2025-04-11T17:46:32.898Z"
   },
   {
     "id": "5204837f-ee4b-43c9-b76d-d59656c5cde9",
@@ -30,7 +32,8 @@
     "email": "Noemi14@hotmail.com",
     "image": "Pepitas-infused Pigeon.jpg",
     "isFavorite": true,
-    "dateCreated": "2025-04-11T19:16:45.993Z"
+    "dateCreated": "2025-04-11T19:16:45.993Z",
+    "dateModified": "2025-04-11T19:16:45.993Z"
   },
   {
     "id": "bc0f766a-6d27-4dc1-837d-828b314dd7d7",
@@ -41,7 +44,8 @@
     "email": "David91@gmail.com",
     "image": "Pierogi.jpg",
     "isFavorite": true,
-    "dateCreated": "2025-04-16T11:42:12.899Z"
+    "dateCreated": "2025-04-16T11:42:12.899Z",
+    "dateModified": "2025-04-16T11:42:12.899Z"
   },
   {
     "id": "0ee4dc7b-c483-4d26-b9bd-1d15f66ca9f5",
@@ -52,6 +56,7 @@
     "email": "Elmer57@gmail.com",
     "image": "Rich Ethiopian Stew.jpg",
     "isFavorite": false,
-    "dateCreated": "2025-04-16T21:52:24.421Z"
+    "dateCreated": "2025-04-16T21:52:24.421Z",
+    "dateModified": "2025-04-16T21:52:24.421Z"
   }
 ]

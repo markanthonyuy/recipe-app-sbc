@@ -8,6 +8,7 @@ import { FormContainer } from '@/components/layouts/FormContainer'
 import { FormMainContainer } from '@/components/layouts/FormMainContainer'
 import { FormSidebarContainer } from '@/components/layouts/FormSidebarContainer'
 import { MainLayout } from '@/components/layouts/MainLayout'
+import { uploadImage } from '@/helpers/upload'
 import { useRecipes } from '@/providers/RecipesProvider'
 import { RecipeSchema } from '@/schema/RecipeSchema'
 import { PreviewableFile } from '@/types/File'
@@ -45,7 +46,7 @@ export default function EditRecipe() {
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      'image/*': ['jpg', 'png', 'gif'],
+      'image/*': ['.jpg', '.png', '.gif'],
     },
     multiple: false,
     onDrop: (acceptedFiles: File[]) => {
@@ -77,20 +78,12 @@ export default function EditRecipe() {
     }
 
     if (files?.length) {
-      // Upload image
-      const uploadFileData = new FormData()
-      uploadFileData.set('file', files[0])
-      uploadFileData.set('name', newRecipe.title)
-
-      const upload = await fetch('/api/upload', {
-        method: 'POST',
-        body: uploadFileData,
+      const upload = await uploadImage<{ success: boolean }>({
+        file: files[0],
+        fileName: newRecipe.title,
       })
 
-      const uploadResult = await upload.json()
-
-      // @ts-ignore fix later
-      if (!uploadResult.success) {
+      if (!upload.success) {
         throw Error('Uploading image failed')
       }
     }

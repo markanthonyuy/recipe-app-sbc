@@ -20,6 +20,7 @@ import { BackButton } from '@/components/common/BackButton'
 import { FormButtonContainer } from '@/components/layouts/FormButtonContainer'
 import { Toast } from '@/components/common/Toast'
 import { getFileExtension } from '@/helpers/file'
+import { uploadImage } from '@/helpers/upload'
 
 export default function AddRecipe() {
   const { handleSetRecipes, recipes, checkTitleExists } = useRecipes()
@@ -76,19 +77,12 @@ export default function AddRecipe() {
         throw Error('No file selected')
       }
 
-      // Upload image
-      const uploadFileData = new FormData()
-      uploadFileData.set('file', files[0])
-      uploadFileData.set('name', newRecipe.title)
-
-      const upload = await fetch('/api/upload', {
-        method: 'POST',
-        body: uploadFileData,
+      const upload = await uploadImage<{ success: boolean }>({
+        file: files[0],
+        fileName: newRecipe.title,
       })
-      const uploadResult = await upload.json()
 
-      // @ts-ignore fix later
-      if (!uploadResult.success) {
+      if (!upload.success) {
         throw Error('Uploading image failed')
       }
 

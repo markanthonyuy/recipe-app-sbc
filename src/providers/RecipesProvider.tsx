@@ -1,5 +1,4 @@
-import { SortType } from '@/constants/Sort'
-import { Recipe } from '@/types/Recipes'
+import { Recipe, SortDirection } from '@/types/Recipes'
 import INITIAL_RECIPES_DATA from '../../public/initial-recipes.json'
 import {
   createContext,
@@ -10,7 +9,7 @@ import {
 } from 'react'
 
 const Recipes = {
-  handleSortRecipes: (sort: keyof typeof SortType) => {},
+  handleSortRecipes: (sort: SortDirection) => {},
   handleFilterFavorite: (favorite: boolean | null) => {},
   handleFilterRecipes: (filterString: string) => {},
   handleSetFavorite: (id: string) => {},
@@ -31,7 +30,7 @@ export const RecipesContext = createContext<
 >(null)
 
 export const RecipesProvider = ({ children }: PropsWithChildren) => {
-  const [sortByTitle, setSortByTitle] = useState<keyof typeof SortType>('ASC')
+  const [sortByTitle, setSortByTitle] = useState<SortDirection>('ASC')
   // favorite can be nullable to show the all state
   const [favorite, setFavorite] = useState<boolean | null>(null)
   const [filterString, setFilterString] = useState('')
@@ -43,7 +42,7 @@ export const RecipesProvider = ({ children }: PropsWithChildren) => {
     useState<Recipe[]>(INITIAL_RECIPES_DATA)
 
   const handleSortRecipes = useCallback(
-    (sort: keyof typeof SortType) => {
+    (sort: SortDirection) => {
       let tempRecipes: Recipe[] = []
       if (!recipes.length) {
         setSortByTitle(sort)

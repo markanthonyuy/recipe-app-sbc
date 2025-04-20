@@ -14,6 +14,7 @@ import { DRAWER_WIDTH, MAIN_HEADER_HEIGHT_WITH_PADDING } from '@/constants/Misc'
 import { useDispatch, useSelector } from 'react-redux'
 import { filterIsFavorite, sort } from '@/state/recipes/recipesSlice'
 import { RootState } from '@/state/store'
+import { SortDirection } from '@/types/Recipes'
 
 const BaseDrawer = styled(Drawer)({
   width: DRAWER_WIDTH,
@@ -59,8 +60,8 @@ export const Sidebar = () => {
           <Typography variant="subtitle1">Sort by Title</Typography>
           <Select
             onChange={(e) => {
-              // handleSortRecipes(e.currentTarget.value as keyof typeof SortType)
-              dispatch(sort(e.currentTarget.value as keyof typeof SortType))
+              // handleSortRecipes(e.currentTarget.value as SortDirection)
+              dispatch(sort(e.currentTarget.value as SortDirection))
             }}
           >
             {Object.entries(SortType).map(([key, value]) => {

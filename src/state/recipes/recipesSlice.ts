@@ -1,21 +1,11 @@
-import { Recipe } from '@/types/Recipes'
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {
+  FilterFavorite,
+  Recipe,
+  RecipeState,
+  SortDirection,
+} from '@/types/Recipes'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import INITIAL_RECIPES_DATA from '../../../public/initial-recipes.json'
-
-// Define sort direction type
-type SortDirection = 'ASC' | 'DESC'
-
-// Define filter favorite type
-type FilterFavorite = 'ALL' | 'FAVORITE' | 'NOT_FAVORITE'
-
-// Define state interface
-type RecipeState = {
-  recipes: Recipe[]
-  filteredRecipes: Recipe[]
-  sortDirection: SortDirection
-  filterFavorite: FilterFavorite
-  searchQuery: string
-}
 
 const initialState: RecipeState = {
   // @ts-expect-error

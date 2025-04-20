@@ -34,7 +34,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 export default function EditRecipe() {
   const router = useRouter()
-  const recipes = useSelector((state: RootState) => state.recipes)
+  const { recipes } = useSelector((state: RootState) => state.recipes)
   const dispatch = useDispatch()
   const [openState, setOpenState] = useState({
     editToast: false,

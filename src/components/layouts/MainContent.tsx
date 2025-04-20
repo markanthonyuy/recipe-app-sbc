@@ -28,7 +28,7 @@ const Top = styled(Box)({
 })
 
 export const MainContent = () => {
-  const recipes = useSelector((state: RootState) => state.recipes)
+  const { filteredRecipes } = useSelector((state: RootState) => state.recipes)
   // const { isLoading, handleSetFavorite } = useRecipes()
 
   return (
@@ -40,7 +40,7 @@ export const MainContent = () => {
           </Fab>
         </Link>
       </Top>
-      <CardList recipes={recipes} />
+      <CardList recipes={filteredRecipes} />
     </BaseMainContent>
   )
 }

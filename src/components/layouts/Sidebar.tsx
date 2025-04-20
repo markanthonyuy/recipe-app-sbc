@@ -11,6 +11,9 @@ import {
 import { SortType } from '@/constants/Sort'
 import { useRecipes } from '@/providers/RecipesProvider'
 import { DRAWER_WIDTH, MAIN_HEADER_HEIGHT_WITH_PADDING } from '@/constants/Misc'
+import { useDispatch, useSelector } from 'react-redux'
+import { filterIsFavorite, sort } from '@/state/recipes/recipesSlice'
+import { RootState } from '@/state/store'
 
 const BaseDrawer = styled(Drawer)({
   width: DRAWER_WIDTH,
@@ -44,15 +47,20 @@ const FilterBox = styled(Stack)(({ theme }) => ({
 }))
 
 export const Sidebar = () => {
+  const { recipes, filterFavorite } = useSelector(
+    (state: RootState) => state.recipes
+  )
+  const dispatch = useDispatch()
   // const { handleSortRecipes, handleFilterFavorite, favorite } = useRecipes()
   return (
     <BaseDrawer variant="permanent" anchor="left">
       <BaseSidebar useFlexGap gap={5}>
         <Stack useFlexGap gap={2}>
           <Typography variant="subtitle1">Sort by Title</Typography>
-          {/* <Select
+          <Select
             onChange={(e) => {
-              handleSortRecipes(e.currentTarget.value as keyof typeof SortType)
+              // handleSortRecipes(e.currentTarget.value as keyof typeof SortType)
+              dispatch(sort(e.currentTarget.value as keyof typeof SortType))
             }}
           >
             {Object.entries(SortType).map(([key, value]) => {
@@ -62,27 +70,34 @@ export const Sidebar = () => {
                 </option>
               )
             })}
-          </Select> */}
+          </Select>
         </Stack>
         <Stack useFlexGap gap={2}>
           <Typography variant="subtitle1">Filter</Typography>
 
-          {/* <FilterBox useFlexGap gap={1}>
+          <FilterBox useFlexGap gap={1}>
             <Typography variant="subtitle2">Favorites?</Typography>
             <RadioGroup
               name="favorites-radio-buttons-group"
               onChange={(e) => {
-                handleFilterFavorite(e.currentTarget.value === 'YES')
+                dispatch(
+                  filterIsFavorite(
+                    e.currentTarget.value === 'YES'
+                      ? 'FAVORITE'
+                      : 'NOT_FAVORITE'
+                  )
+                )
+                // handleFilterFavorite(e.currentTarget.value === 'YES')
               }}
             >
               <FormControlLabel
                 value="YES"
-                control={<Radio checked={favorite !== null && favorite} />}
+                control={<Radio checked={filterFavorite === 'FAVORITE'} />}
                 label="Yes"
               />
               <FormControlLabel
                 value="NO"
-                control={<Radio checked={favorite !== null && !favorite} />}
+                control={<Radio checked={filterFavorite === 'NOT_FAVORITE'} />}
                 label="No"
               />
             </RadioGroup>
@@ -92,11 +107,11 @@ export const Sidebar = () => {
             component="button"
             variant="body2"
             onClick={() => {
-              handleFilterFavorite(null)
+              dispatch(filterIsFavorite('ALL'))
             }}
           >
             Reset favorites
-          </Link> */}
+          </Link>
         </Stack>
       </BaseSidebar>
     </BaseDrawer>

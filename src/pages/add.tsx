@@ -26,7 +26,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { add } from '@/state/recipes/recipesSlice'
 
 export default function AddRecipe() {
-  const recipes = useSelector((state: RootState) => state.recipes)
+  const { recipes } = useSelector((state: RootState) => state.recipes)
   const dispatch = useDispatch()
   // const { handleSetRecipes, recipes, checkTitleExists } = useRecipes()
   const checkTitleExists = useCallback(

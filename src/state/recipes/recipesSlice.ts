@@ -2,37 +2,128 @@ import { Recipe } from '@/types/Recipes'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import INITIAL_RECIPES_DATA from '../../../public/initial-recipes.json'
 
-// @ts-expect-error data comes from JSON file
-const initialState: Recipe[] = INITIAL_RECIPES_DATA
+// Define sort direction type
+type SortDirection = 'ASC' | 'DESC'
+
+// Define filter favorite type
+type FilterFavorite = 'ALL' | 'FAVORITE' | 'NOT_FAVORITE'
+
+// Define state interface
+type RecipeState = {
+  recipes: Recipe[]
+  filteredRecipes: Recipe[]
+  sortDirection: SortDirection
+  filterFavorite: FilterFavorite
+  searchQuery: string
+}
+
+const initialState: RecipeState = {
+  // @ts-expect-error
+  recipes: INITIAL_RECIPES_DATA,
+  filteredRecipes: [],
+  sortDirection: 'ASC',
+  filterFavorite: 'ALL',
+  searchQuery: '',
+}
 
 const recipesSlice = createSlice({
-  name: 'recipes',
+  name: 'recipe',
   initialState,
   reducers: {
     add: (state, action: PayloadAction<Recipe>) => {
-      state.push(action.payload)
+      state.recipes.push(action.payload)
+      applyFilters(state)
     },
     remove: (state, action: PayloadAction<string>) => {
-      const index = state.findIndex((recipe) => recipe.id === action.payload)
+      const index = state.recipes.findIndex(
+        (recipe) => recipe.id === action.payload
+      )
       if (index !== -1) {
-        state.splice(index, 1)
+        state.recipes.splice(index, 1)
+        applyFilters(state)
       }
     },
     edit: (state, action: PayloadAction<Recipe>) => {
-      const index = state.findIndex((recipe) => recipe.id === action.payload.id)
+      const index = state.recipes.findIndex(
+        (recipe) => recipe.id === action.payload.id
+      )
       if (index !== -1) {
-        state[index] = action.payload
+        state.recipes[index] = action.payload
+        applyFilters(state)
       }
     },
     toggleIsFavorite: (state, action: PayloadAction<string>) => {
-      const index = state.findIndex((recipe) => recipe.id === action.payload)
+      const index = state.recipes.findIndex(
+        (recipe) => recipe.id === action.payload
+      )
       if (index !== -1) {
-        state[index].isFavorite = !state[index].isFavorite
+        state.recipes[index].isFavorite = !state.recipes[index].isFavorite
+        applyFilters(state)
       }
+    },
+    sort: (state, action: PayloadAction<SortDirection>) => {
+      state.sortDirection = action.payload
+      applyFilters(state)
+    },
+    filterIsFavorite: (state, action: PayloadAction<FilterFavorite>) => {
+      state.filterFavorite = action.payload
+      applyFilters(state)
+    },
+    search: (state, action: PayloadAction<string>) => {
+      state.searchQuery = action.payload
+      applyFilters(state)
     },
   },
 })
 
-export const { add, edit, toggleIsFavorite, remove } = recipesSlice.actions
+// Helper function to apply all filters
+const applyFilters = (state: RecipeState) => {
+  // Start with all recipes
+  let filtered = [...state.recipes]
+
+  // Apply favorite filter
+  if (state.filterFavorite === 'FAVORITE') {
+    filtered = filtered.filter((recipe) => recipe.isFavorite === true)
+  } else if (state.filterFavorite === 'NOT_FAVORITE') {
+    filtered = filtered.filter((recipe) => recipe.isFavorite === false)
+  }
+
+  // Apply search filter
+  if (state.searchQuery) {
+    const query = state.searchQuery.toLowerCase()
+    filtered = filtered.filter(
+      (recipe) =>
+        recipe.title.toLowerCase().includes(query) ||
+        (recipe.instructions &&
+          recipe.instructions.toLowerCase().includes(query)) ||
+        (recipe.name && recipe.name.toLowerCase().includes(query))
+    )
+  }
+
+  // Apply sorting
+  filtered.sort((a, b) => {
+    if (state.sortDirection === 'ASC') {
+      return a.title.localeCompare(b.title)
+    } else {
+      return b.title.localeCompare(a.title)
+    }
+  })
+
+  // Update filtered recipes
+  state.filteredRecipes = filtered
+}
+
+// Initialize filtered recipes
+applyFilters(initialState)
+
+export const {
+  add,
+  edit,
+  toggleIsFavorite,
+  remove,
+  sort,
+  filterIsFavorite,
+  search,
+} = recipesSlice.actions
 
 export default recipesSlice.reducer

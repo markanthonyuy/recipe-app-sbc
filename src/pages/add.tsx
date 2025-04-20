@@ -29,11 +29,19 @@ export default function AddRecipe() {
     formErrorToast: false,
   })
   const [files, setFiles] = useState<PreviewableFile[]>()
+  const [fileUploadError, setFileUploadError] = useState('')
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      'image/*': ['jpg', 'png', 'gif'],
+      'image/*': ['.jpg', '.png', '.gif'],
     },
     multiple: false,
+    maxSize: 2000000, // 2MB
+    onDropRejected: (e) => {
+      setFileUploadError(e[0].errors[0].message)
+    },
+    onDropAccepted: () => {
+      setFileUploadError('')
+    },
     onDrop: (acceptedFiles: File[]) => {
       setFiles(
         acceptedFiles.map((file: PreviewableFile) =>
@@ -98,6 +106,7 @@ export default function AddRecipe() {
         addSuccessToast: true,
       })
 
+      setFileUploadError('')
       reset(INTIAL_FORM_VALUE)
       setFiles(undefined)
     } catch (e) {
@@ -116,6 +125,7 @@ export default function AddRecipe() {
               files={files}
               getInputProps={getInputProps}
               getRootProps={getRootProps}
+              error={fileUploadError}
             />
           </FormSidebarContainer>
           <FormContainer>

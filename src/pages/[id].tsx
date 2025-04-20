@@ -43,12 +43,19 @@ export default function EditRecipe() {
     })
   }, [recipes, router.query.id])
   const [files, setFiles] = useState<PreviewableFile[]>()
-
+  const [fileUploadError, setFileUploadError] = useState('')
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       'image/*': ['.jpg', '.png', '.gif'],
     },
     multiple: false,
+    maxSize: 2000000, // 2MB
+    onDropRejected: (e) => {
+      setFileUploadError(e[0].errors[0].message)
+    },
+    onDropAccepted: () => {
+      setFileUploadError('')
+    },
     onDrop: (acceptedFiles: File[]) => {
       setFiles(
         acceptedFiles.map((file: PreviewableFile) =>
@@ -98,6 +105,7 @@ export default function EditRecipe() {
       ...openState,
       editToast: true,
     })
+    setFileUploadError('')
     setTimeout(() => {
       router.push({
         pathname: '/',
@@ -155,6 +163,7 @@ export default function EditRecipe() {
               getInputProps={getInputProps}
               getRootProps={getRootProps}
               defaultValue={selectedRecipe?.image}
+              error={fileUploadError}
             />
           </FormSidebarContainer>
           <FormContainer>

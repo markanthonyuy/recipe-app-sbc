@@ -16,6 +16,7 @@ const createRecipe = () => {
     dateCreated: faker.date.recent({
       days: 10,
     }),
+    dateModified: new Date(),
   }
 }
 

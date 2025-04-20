@@ -68,7 +68,6 @@ export const RecipesProvider = ({ children }: PropsWithChildren) => {
   const handleFilterRecipes = useCallback(
     (filterString: string) => {
       let tempRecipes: Recipe[] = []
-      console.log(filterString)
       if (filterString?.length === 0) {
         setFilterString(filterString)
         setFilteredRecipes(recipes)

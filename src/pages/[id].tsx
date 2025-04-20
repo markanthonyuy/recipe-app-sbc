@@ -67,6 +67,7 @@ export default function EditRecipe() {
     defaultValues: {
       ...selectedRecipe,
       dateCreated: new Date(selectedRecipe?.dateCreated || ''),
+      dateModified: new Date(),
     },
   })
 
@@ -89,7 +90,7 @@ export default function EditRecipe() {
       const uploadResult = await upload.json()
 
       // @ts-ignore fix later
-      if (!uploadResult.status === 'fail') {
+      if (!uploadResult.success) {
         throw Error('Uploading image failed')
       }
     }

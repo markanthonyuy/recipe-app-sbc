@@ -50,7 +50,12 @@ export default function AddRecipe() {
     formState: { errors },
   } = useForm<Recipe>({
     resolver: zodResolver(RecipeSchema),
-    defaultValues: { ...INTIAL_FORM_VALUE, id: generateUUIDv4() },
+    defaultValues: {
+      ...INTIAL_FORM_VALUE,
+      id: generateUUIDv4(),
+      dateCreated: new Date(),
+      dateModified: new Date(),
+    },
   })
 
   const onSubmit = handleSubmit(async (newRecipe) => {
@@ -76,12 +81,14 @@ export default function AddRecipe() {
       uploadFileData.set('file', files[0])
       uploadFileData.set('name', newRecipe.title)
 
-      const uploadResult = await fetch('/api/upload', {
+      const upload = await fetch('/api/upload', {
         method: 'POST',
         body: uploadFileData,
       })
+      const uploadResult = await upload.json()
 
-      if (!uploadResult) {
+      // @ts-ignore fix later
+      if (!uploadResult.success) {
         throw Error('Uploading image failed')
       }
 

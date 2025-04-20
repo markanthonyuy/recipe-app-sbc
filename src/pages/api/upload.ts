@@ -36,9 +36,9 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       `./public/images/${data.fields.name[0]}.${fileExt}`
     )
 
-    return res.json({ status: 'success' })
+    return res.json({ success: true })
   } catch (e) {
     console.error(e)
-    return res.json({ status: 'fail', error: e })
+    return res.json({ success: false, error: e })
   }
 }

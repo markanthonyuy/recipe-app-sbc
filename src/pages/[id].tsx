@@ -36,16 +36,16 @@ export default function EditRecipe() {
     deleteToast: false,
     deleteConfirmDialog: false,
   })
-  const [files, setFiles] = useState<PreviewableFile[]>()
   const selectedRecipe = useMemo(() => {
     return recipes?.find((recipe) => {
       return router.query.id === recipe.id
     })
   }, [recipes, router.query.id])
+  const [files, setFiles] = useState<PreviewableFile[]>()
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      'image/*': [],
+      'image/*': ['jpg', 'png', 'gif'],
     },
     multiple: false,
     onDrop: (acceptedFiles: File[]) => {
@@ -70,10 +70,30 @@ export default function EditRecipe() {
     },
   })
 
-  const onSubmit = handleSubmit((newRecipe) => {
+  const onSubmit = handleSubmit(async (newRecipe) => {
     if (!newRecipe) {
       throw Error('Invalid form value')
     }
+
+    if (files?.length) {
+      // Upload image
+      const uploadFileData = new FormData()
+      uploadFileData.set('file', files[0])
+      uploadFileData.set('name', newRecipe.title)
+
+      const upload = await fetch('/api/upload', {
+        method: 'POST',
+        body: uploadFileData,
+      })
+
+      const uploadResult = await upload.json()
+
+      // @ts-ignore fix later
+      if (!uploadResult.status === 'fail') {
+        throw Error('Uploading image failed')
+      }
+    }
+
     if (recipes?.length) {
       const newRecipes = recipes.map((recipe) => {
         return recipe.id !== router.query.id ? recipe : { ...newRecipe }
@@ -140,6 +160,7 @@ export default function EditRecipe() {
               files={files}
               getInputProps={getInputProps}
               getRootProps={getRootProps}
+              defaultValue={selectedRecipe?.image}
             />
           </FormSidebarContainer>
           <FormContainer>

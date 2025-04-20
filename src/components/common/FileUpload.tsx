@@ -1,3 +1,4 @@
+import { FILE_UPLOAD_IMAGE_WIDTH } from '@/constants/Upload'
 import { PreviewableFile } from '@/types/File'
 import { styled, Box, Typography } from '@mui/material'
 import Image from 'next/image'
@@ -20,6 +21,7 @@ type Props = {
   files?: PreviewableFile[]
   getRootProps: ReturnType<typeof useDropzone>['getRootProps']
   getInputProps: ReturnType<typeof useDropzone>['getInputProps']
+  defaultValue?: string
 }
 
 export const FileUpload = (props: Props) => {
@@ -27,6 +29,7 @@ export const FileUpload = (props: Props) => {
     <DropZoneContainer {...props.getRootProps({ className: 'dropzone' })}>
       <input {...props.getInputProps()} />
       {props.files?.length && props.files[0]?.preview ? (
+        // Preview from file upload
         <Image
           src={props.files[0]?.preview}
           onLoad={() => {
@@ -34,9 +37,17 @@ export const FileUpload = (props: Props) => {
               URL.revokeObjectURL(props.files[0].preview)
             }
           }}
-          height={300}
-          width={300}
-          alt="Photo"
+          height={FILE_UPLOAD_IMAGE_WIDTH}
+          width={FILE_UPLOAD_IMAGE_WIDTH}
+          alt="Photo of the recipe"
+        />
+      ) : props.defaultValue ? (
+        // Preview from file data
+        <img
+          src={`/images/${props.defaultValue}?${Date.now()}`}
+          height={FILE_UPLOAD_IMAGE_WIDTH}
+          width={FILE_UPLOAD_IMAGE_WIDTH}
+          alt="Photo of the recipe"
         />
       ) : (
         <Typography>Upload photo</Typography>

@@ -106,7 +106,7 @@ export const CardList = (props: Props) => {
               <ImageContainer>
                 {recipe.image && (
                   <Image
-                    src={`/images/${recipe.image}`}
+                    src={`/images/${recipe.image}?${Date.now()}`}
                     alt={`Photo of ${recipe.title}`}
                     width="164"
                     height="164"

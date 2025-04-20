@@ -44,13 +44,13 @@ const FilterBox = styled(Stack)(({ theme }) => ({
 }))
 
 export const Sidebar = () => {
-  const { handleSortRecipes, handleFilterFavorite, favorite } = useRecipes()
+  // const { handleSortRecipes, handleFilterFavorite, favorite } = useRecipes()
   return (
     <BaseDrawer variant="permanent" anchor="left">
       <BaseSidebar useFlexGap gap={5}>
         <Stack useFlexGap gap={2}>
           <Typography variant="subtitle1">Sort by Title</Typography>
-          <Select
+          {/* <Select
             onChange={(e) => {
               handleSortRecipes(e.currentTarget.value as keyof typeof SortType)
             }}
@@ -62,12 +62,12 @@ export const Sidebar = () => {
                 </option>
               )
             })}
-          </Select>
+          </Select> */}
         </Stack>
         <Stack useFlexGap gap={2}>
           <Typography variant="subtitle1">Filter</Typography>
 
-          <FilterBox useFlexGap gap={1}>
+          {/* <FilterBox useFlexGap gap={1}>
             <Typography variant="subtitle2">Favorites?</Typography>
             <RadioGroup
               name="favorites-radio-buttons-group"
@@ -96,7 +96,7 @@ export const Sidebar = () => {
             }}
           >
             Reset favorites
-          </Link>
+          </Link> */}
         </Stack>
       </BaseSidebar>
     </BaseDrawer>

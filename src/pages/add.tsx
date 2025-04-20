@@ -5,7 +5,7 @@ import { Box, Button, Stack } from '@mui/material'
 import { Header } from '@/components/common/Header'
 import { MainLayout } from '@/components/layouts/MainLayout'
 import { useDropzone } from 'react-dropzone'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { FormTextField } from '@/components/forms/FormTextField'
 import { Recipe } from '@/types/Recipes'
 import { useRecipes } from '@/providers/RecipesProvider'
@@ -21,9 +21,24 @@ import { FormButtonContainer } from '@/components/layouts/FormButtonContainer'
 import { Toast } from '@/components/common/Toast'
 import { getFileExtension } from '@/helpers/file'
 import { uploadImage } from '@/helpers/upload'
+import { RootState } from '@/state/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { add } from '@/state/recipes/recipesSlice'
 
 export default function AddRecipe() {
-  const { handleSetRecipes, recipes, checkTitleExists } = useRecipes()
+  const recipes = useSelector((state: RootState) => state.recipes)
+  const dispatch = useDispatch()
+  // const { handleSetRecipes, recipes, checkTitleExists } = useRecipes()
+  const checkTitleExists = useCallback(
+    (newTitle: string) => {
+      const recipeTitles = recipes.map((recipe) => {
+        return recipe.title
+      })
+
+      return recipeTitles.includes(newTitle)
+    },
+    [recipes]
+  )
   const [openState, setOpenState] = useState({
     addSuccessToast: false,
     formErrorToast: false,
@@ -94,13 +109,19 @@ export default function AddRecipe() {
         throw Error('Uploading image failed')
       }
 
-      handleSetRecipes([
-        ...(recipes || []),
-        {
+      dispatch(
+        add({
           ...newRecipe,
           image: `${newRecipe.title}.${getFileExtension(files[0].name)}`,
-        },
-      ])
+        })
+      )
+      // handleSetRecipes([
+      //   ...(recipes || []),
+      //   {
+      //     ...newRecipe,
+      //     image: `${newRecipe.title}.${getFileExtension(files[0].name)}`,
+      //   },
+      // ])
       setOpenState({
         ...openState,
         addSuccessToast: true,

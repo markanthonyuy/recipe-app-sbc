@@ -11,6 +11,8 @@ import { MainLayout } from '@/components/layouts/MainLayout'
 import { uploadImage } from '@/helpers/upload'
 import { useRecipes } from '@/providers/RecipesProvider'
 import { RecipeSchema } from '@/schema/RecipeSchema'
+import { edit, remove } from '@/state/recipes/recipesSlice'
+import { RootState } from '@/state/store'
 import { PreviewableFile } from '@/types/File'
 import { Recipe } from '@/types/Recipes'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -28,10 +30,12 @@ import { useRouter } from 'next/router'
 import { useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
 
 export default function EditRecipe() {
   const router = useRouter()
-  const { handleSetRecipes, recipes } = useRecipes()
+  const recipes = useSelector((state: RootState) => state.recipes)
+  const dispatch = useDispatch()
   const [openState, setOpenState] = useState({
     editToast: false,
     deleteToast: false,
@@ -99,7 +103,13 @@ export default function EditRecipe() {
       const newRecipes = recipes.map((recipe) => {
         return recipe.id !== router.query.id ? recipe : { ...newRecipe }
       })
-      handleSetRecipes(newRecipes)
+      // handleSetRecipes(newRecipes)
+
+      dispatch(
+        edit({
+          ...newRecipe,
+        })
+      )
     }
     setOpenState({
       ...openState,
@@ -131,12 +141,13 @@ export default function EditRecipe() {
     if (!selectedRecipe || !recipes) {
       throw Error('No recipe selected or available')
     }
-    const tempRecipes =
-      recipes.filter((recipe) => {
-        return selectedRecipe.id !== recipe.id
-      }) || []
+    // const tempRecipes =
+    //   recipes.filter((recipe) => {
+    //     return selectedRecipe.id !== recipe.id
+    //   }) || []
 
-    handleSetRecipes(tempRecipes)
+    // handleSetRecipes(tempRecipes)
+    dispatch(remove(selectedRecipe.id))
 
     setOpenState({
       ...openState,

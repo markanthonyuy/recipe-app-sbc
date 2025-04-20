@@ -77,25 +77,25 @@ const EmptyCardListContainer = styled(Stack)({
 
 type Props = {
   recipes?: Recipe[] | null
-  loading: boolean
-  handleSetFavorite: (id: string) => void
+  // loading: boolean
+  // handleSetFavorite: (id: string) => void
 }
 
 export const CardList = (props: Props) => {
-  if (props.loading) {
-    return (
-      <EmptyCardListContainer>
-        <CircularProgress />
-      </EmptyCardListContainer>
-    )
-  }
-  if (!props.recipes?.length && !props.loading) {
-    return (
-      <EmptyCardListContainer>
-        <Typography variant="h5">No Record Found!</Typography>
-      </EmptyCardListContainer>
-    )
-  }
+  // if (props.loading) {
+  //   return (
+  //     <EmptyCardListContainer>
+  //       <CircularProgress />
+  //     </EmptyCardListContainer>
+  //   )
+  // }
+  // if (!props.recipes?.length && !props.loading) {
+  //   return (
+  //     <EmptyCardListContainer>
+  //       <Typography variant="h5">No Record Found!</Typography>
+  //     </EmptyCardListContainer>
+  //   )
+  // }
 
   return (
     <CardListContainer gap={2}>
@@ -118,7 +118,7 @@ export const CardList = (props: Props) => {
                 <FavoriteIconButton
                   isFavorite={!!recipe.isFavorite}
                   id={recipe.id}
-                  handleSetFavorite={props.handleSetFavorite}
+                  // handleSetFavorite={props.handleSetFavorite}
                 />
               </ImageContainer>
               <Information>

@@ -2,6 +2,8 @@ import { styled, IconButton } from '@mui/material'
 
 import StarIcon from '@mui/icons-material/Star'
 import StarOutlineIcon from '@mui/icons-material/StarOutline'
+import { useDispatch } from 'react-redux'
+import { toggleIsFavorite } from '@/state/recipes/recipesSlice'
 
 const FavoriteButton = styled(IconButton)({
   position: 'absolute',
@@ -12,14 +14,16 @@ const FavoriteButton = styled(IconButton)({
 type Props = {
   isFavorite: boolean
   id: string
-  handleSetFavorite: (id: string) => void
+  // handleSetFavorite: (id: string) => void
 }
 
 export const FavoriteIconButton = (props: Props) => {
+  const dispatch = useDispatch()
   return (
     <FavoriteButton
       onClick={() => {
-        props.handleSetFavorite(props.id)
+        // props.handleSetFavorite(props.id)
+        dispatch(toggleIsFavorite(props.id))
       }}
     >
       {props.isFavorite ? (

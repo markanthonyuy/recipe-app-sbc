@@ -7,6 +7,8 @@ import {
   MAIN_HEADER_HEIGHT_WITH_PADDING,
 } from '@/constants/Misc'
 import Link from 'next/link'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/state/store'
 
 const BaseMainContent = styled(Box)({
   flexGrow: 1,
@@ -26,7 +28,8 @@ const Top = styled(Box)({
 })
 
 export const MainContent = () => {
-  const { recipes, isLoading, handleSetFavorite } = useRecipes()
+  const recipes = useSelector((state: RootState) => state.recipes)
+  // const { isLoading, handleSetFavorite } = useRecipes()
 
   return (
     <BaseMainContent>
@@ -37,11 +40,7 @@ export const MainContent = () => {
           </Fab>
         </Link>
       </Top>
-      <CardList
-        recipes={recipes}
-        loading={isLoading}
-        handleSetFavorite={handleSetFavorite}
-      />
+      <CardList recipes={recipes} />
     </BaseMainContent>
   )
 }

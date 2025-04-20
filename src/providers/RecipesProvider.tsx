@@ -1,6 +1,6 @@
 import { SortType } from '@/constants/Sort'
 import { Recipe } from '@/types/Recipes'
-import INITIAL_RECIPES_DATA from '@/mocks/initial-recipes.json'
+import INITIAL_RECIPES_DATA from '../../public/initial-recipes.json'
 import {
   createContext,
   PropsWithChildren,

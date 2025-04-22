@@ -11,8 +11,8 @@ import { MainLayout } from '@/components/layouts/MainLayout'
 import { uploadImage } from '@/helpers/upload'
 import { useRecipes } from '@/providers/RecipesProvider'
 import { RecipeSchema } from '@/schema/RecipeSchema'
-import { edit, remove } from '@/state/recipes/recipesSlice'
-import { RootState } from '@/state/store'
+import { edit, remove, uploadImageAsync } from '@/state/recipes/recipesSlice'
+import { AppDispatch, RootState } from '@/state/store'
 import { PreviewableFile } from '@/types/File'
 import { Recipe } from '@/types/Recipes'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -35,7 +35,7 @@ import { useDispatch, useSelector } from 'react-redux'
 export default function EditRecipe() {
   const router = useRouter()
   const { recipes } = useSelector((state: RootState) => state.recipes)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const [openState, setOpenState] = useState({
     editToast: false,
     deleteToast: false,
@@ -89,14 +89,21 @@ export default function EditRecipe() {
     }
 
     if (files?.length) {
-      const upload = await uploadImage<{ success: boolean }>({
-        file: files[0],
-        fileName: newRecipe.title,
-      })
+      // const upload = await uploadImage<{ success: boolean }>({
+      //   file: files[0],
+      //   fileName: newRecipe.title,
+      // })
 
-      if (!upload.success) {
-        throw Error('Uploading image failed')
-      }
+      // if (!upload.success) {
+      //   throw Error('Uploading image failed')
+      // }
+
+      dispatch(
+        uploadImageAsync({
+          file: files[0],
+          fileName: newRecipe.title,
+        })
+      )
     }
 
     if (recipes?.length) {

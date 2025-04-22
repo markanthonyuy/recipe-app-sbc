@@ -48,9 +48,7 @@ const FilterBox = styled(Stack)(({ theme }) => ({
 }))
 
 export const Sidebar = () => {
-  const { recipes, filterFavorite } = useSelector(
-    (state: RootState) => state.recipes
-  )
+  const { filterFavorite } = useSelector((state: RootState) => state.recipes)
   const dispatch = useDispatch()
   // const { handleSortRecipes, handleFilterFavorite, favorite } = useRecipes()
   return (

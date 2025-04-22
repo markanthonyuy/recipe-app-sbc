@@ -17,4 +17,5 @@ export type RecipeState = {
   sortDirection: SortDirection
   filterFavorite: FilterFavorite
   searchQuery: string
+  isImageUploadLoading: 'idle' | 'loading' | 'error'
 }

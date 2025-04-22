@@ -14,6 +14,7 @@ const initialState: RecipeState = {
   sortDirection: 'ASC',
   filterFavorite: 'ALL',
   searchQuery: '',
+  imageUploadStatus: 'idle',
 }
 
 const recipesSlice = createSlice({
@@ -64,6 +65,18 @@ const recipesSlice = createSlice({
       applyFilters(state)
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(uploadImageAsync.pending, (state) => {
+        state.isImageUploadLoading = 'loading'
+      })
+      .addCase(uploadImageAsync.rejected, (state) => {
+        state.isImageUploadLoading = 'error'
+      })
+      .addCase(uploadImageAsync.fulfilled, (state) => {
+        state.isImageUploadLoading = 'idle'
+      })
+  },
 })
 
 // Helper function to apply all filters
@@ -105,6 +118,24 @@ const applyFilters = (state: RecipeState) => {
 
 // Initialize filtered recipes
 applyFilters(initialState)
+
+export const uploadImageAsync = createAsyncThunk(
+  'recipe/uploadAsync',
+  async ({ file, fileName }: { file: File; fileName: string }) => {
+    // Upload image
+    const uploadFileData = new FormData()
+    uploadFileData.set('file', file)
+    uploadFileData.set('name', fileName)
+
+    const upload = await fetch('/api/upload', {
+      method: 'POST',
+      body: uploadFileData,
+    })
+
+    const result = await upload.json()
+    return result
+  }
+)
 
 export const {
   add,

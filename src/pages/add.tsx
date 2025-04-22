@@ -21,13 +21,13 @@ import { FormButtonContainer } from '@/components/layouts/FormButtonContainer'
 import { Toast } from '@/components/common/Toast'
 import { getFileExtension } from '@/helpers/file'
 import { uploadImage } from '@/helpers/upload'
-import { RootState } from '@/state/store'
+import { AppDispatch, RootState } from '@/state/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { add } from '@/state/recipes/recipesSlice'
+import { add, uploadImageAsync } from '@/state/recipes/recipesSlice'
 
 export default function AddRecipe() {
   const { recipes } = useSelector((state: RootState) => state.recipes)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   // const { handleSetRecipes, recipes, checkTitleExists } = useRecipes()
   const checkTitleExists = useCallback(
     (newTitle: string) => {
@@ -100,14 +100,20 @@ export default function AddRecipe() {
         throw Error('No file selected')
       }
 
-      const upload = await uploadImage<{ success: boolean }>({
-        file: files[0],
-        fileName: newRecipe.title,
-      })
+      // const upload = await uploadImage<{ success: boolean }>({
+      //   file: files[0],
+      //   fileName: newRecipe.title,
+      // })
 
-      if (!upload.success) {
-        throw Error('Uploading image failed')
-      }
+      // if (!upload.success) {
+      //   throw Error('Uploading image failed')
+      // }
+      dispatch(
+        uploadImageAsync({
+          file: files[0],
+          fileName: newRecipe.title,
+        })
+      )
 
       dispatch(
         add({

@@ -37,6 +37,9 @@ export const FormTextField = (props: Props) => {
               input: {
                 readOnly: props.readonly,
               },
+              inputLabel: {
+                shrink: !!field.value,
+              },
             }}
           />
         )}

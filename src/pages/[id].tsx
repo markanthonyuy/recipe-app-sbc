@@ -16,21 +16,17 @@ import { AppDispatch, RootState } from '@/state/store'
 import { PreviewableFile } from '@/types/File'
 import { Recipe } from '@/types/Recipes'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  Box,
-  Stack,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from '@mui/material'
+import { Box, Stack, Button } from '@mui/material'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
+
+const LazyLoadedConfirmDialog = dynamic(() =>
+  import('../components/common/ConfirmDialog').then((mod) => mod.ConfirmDialog)
+)
 
 export default function EditRecipe() {
   const router = useRouter()
@@ -72,6 +68,7 @@ export default function EditRecipe() {
   })
   const {
     control,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<Recipe>({
@@ -82,6 +79,20 @@ export default function EditRecipe() {
       dateModified: new Date(),
     },
   })
+
+  useEffect(
+    function reinitializeData() {
+      if (!selectedRecipe) {
+        return
+      }
+      reset({
+        ...selectedRecipe,
+        dateCreated: new Date(selectedRecipe.dateCreated),
+        dateModified: new Date(selectedRecipe.dateModified),
+      })
+    },
+    [selectedRecipe]
+  )
 
   const onSubmit = handleSubmit(async (newRecipe) => {
     if (!newRecipe) {
@@ -267,29 +278,15 @@ export default function EditRecipe() {
         }}
         type="success"
       />
-      <Dialog
-        open={openState.deleteConfirmDialog}
-        onClose={handleCloseDeleteConfirmation}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          Delete recipe confirmation
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this recipe?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDeleteConfirmation} color="warning">
-            Cancel
-          </Button>
-          <Button onClick={handleDeleteRecipe} autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {openState.deleteConfirmDialog && (
+        <LazyLoadedConfirmDialog
+          isOpen={openState.deleteConfirmDialog}
+          onCloseClick={handleCloseDeleteConfirmation}
+          title="Delete recipe confirmation"
+          message="Are you sure you want to delete this recipe?"
+          onConfirmClick={handleDeleteRecipe}
+        />
+      )}
     </Box>
   )
 }
